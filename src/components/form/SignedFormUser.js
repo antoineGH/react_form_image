@@ -15,7 +15,7 @@ import {
 } from 'reactstrap'
 
 //INFO: FUNCTION FORM USER
-export default function FormUser() {
+export default function SignedFormUser() {
 	// useState Hooks
 	const [imageLoaded, setImageLoaded] = useState(false)
 	const [imageDesc, setImageDesc] = useState('')
@@ -25,7 +25,6 @@ export default function FormUser() {
 		size: '',
 		type: '',
 	})
-	const [imageURL, setImageURL] = useState('')
 
 	// Validation schema with Yup
 	const regexNoSpecial = /^[a-zA-Z. ]*$/
@@ -79,35 +78,17 @@ export default function FormUser() {
 		},
 	})
 
+	// INFO: USE CLOUDINARY S3 ?
 	function uploadPicture(values) {
-		uploadUnsignedCloudinary(values)
-			.then((response) => {
-				console.log(response)
-				setImageURL(response.url)
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-	}
-
-	async function uploadUnsignedCloudinary(values) {
-		const cloudName = 'dgr9lcyrm'
-		const uploadPreset = 'cg4aqc9y'
-		const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`
-
 		let data = new FormData()
 		data.append('file', values.profile_picture)
-		data.append('upload_preset', uploadPreset)
-
-		const response = await fetch(url, {
+		data.append('upload_preset', 'cg4aqc9y')
+		return fetch('https://api.cloudinary.com/v1_1/dgr9lcyrm/image/upload', {
 			method: 'POST',
 			body: data,
 		})
-		const responseJson = await response.json()
-
-		return new Promise((resolve, reject) => {
-			responseJson ? resolve(responseJson) : reject()
-		})
+			.then((response) => response.text())
+			.catch((error) => console.log(error))
 	}
 
 	return (
@@ -116,7 +97,7 @@ export default function FormUser() {
 				<Card className='mt-4'>
 					<CardBody className='px-lg-5 py-lg-5'>
 						<div className='text-center text-muted mb-4'>
-							<h2>Form Image</h2>
+							<h2>Signed Form Image</h2>
 						</div>
 						<Form onSubmit={handleSubmit}>
 							{/* image_title */}
