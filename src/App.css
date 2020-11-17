@@ -1,5 +1,6 @@
-.App {
-	text-align: center;
+.label_form {
+	text-align: left;
+	justify-content: left;
 }
 
 .App-logo {
@@ -9,7 +10,7 @@
 
 .error_field {
 	color: red;
-	font-size: 1rem;
+	font-size: 0.85rem;
 }
 
 @media (prefers-reduced-motion: no-preference) {
