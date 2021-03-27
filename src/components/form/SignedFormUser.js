@@ -1,18 +1,7 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import {
-	Button,
-	Card,
-	CardBody,
-	FormGroup,
-	FormText,
-	Form,
-	Input,
-	InputGroup,
-	Col,
-	Label,
-} from 'reactstrap'
+import { Button, Card, CardBody, FormGroup, FormText, Form, Input, InputGroup, Col, Label } from 'reactstrap'
 
 //INFO: FUNCTION FORM USER
 export default function SignedFormUser() {
@@ -25,6 +14,7 @@ export default function SignedFormUser() {
 		size: '',
 		type: '',
 	})
+	const [imageURL, setImageURL] = useState('')
 
 	// Validation schema with Yup
 	const regexNoSpecial = /^[a-zA-Z. ]*$/
@@ -32,33 +22,13 @@ export default function SignedFormUser() {
 	const validationSchema = Yup.object({
 		profile_picture: Yup.mixed()
 			.test('fileSize', 'File is too large', (value) => !value || value.size <= 2500000)
-			.test(
-				'fileType',
-				'Format is wrong',
-				(value) => !value || supported_format.includes(value.type)
-			),
-		image_title: Yup.string()
-			.min(2, 'Too short')
-			.max(20, 'Too long')
-			.matches(regexNoSpecial, 'No numbers or special characters')
-			.required('Required'),
-		image_desc: Yup.string()
-			.min(2, 'Too short')
-			.max(50, 'Too long')
-			.matches(regexNoSpecial, 'No numbers or special characters')
-			.required('Required'),
+			.test('fileType', 'Format is wrong', (value) => !value || supported_format.includes(value.type)),
+		image_title: Yup.string().min(2, 'Too short').max(20, 'Too long').matches(regexNoSpecial, 'No numbers or special characters').required('Required'),
+		image_desc: Yup.string().min(2, 'Too short').max(50, 'Too long').matches(regexNoSpecial, 'No numbers or special characters').required('Required'),
 	})
 
 	// Handle Form with Formik
-	const {
-		handleSubmit,
-		handleChange,
-		handleBlur,
-		setFieldValue,
-		values,
-		touched,
-		errors,
-	} = useFormik({
+	const { handleSubmit, handleChange, handleBlur, setFieldValue, values, touched, errors } = useFormik({
 		initialValues: {
 			file: '',
 			image_title: '',
@@ -78,17 +48,41 @@ export default function SignedFormUser() {
 		},
 	})
 
-	// INFO: USE CLOUDINARY S3 ?
 	function uploadPicture(values) {
+		uploadUnsignedCloudinary(values)
+			.then((response) => {
+				console.log(response)
+				setImageURL(response.url)
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}
+
+	async function uploadUnsignedCloudinary(values) {
+		const cloudName = 'dgr9lcyrm'
+		const uploadPreset = 'cg4aqc9y'
+		const api_key = '142917926898631'
+		const url = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`
+		const ts = ''
+		const sig = ''
+
 		let data = new FormData()
 		data.append('file', values.profile_picture)
-		data.append('upload_preset', 'cg4aqc9y')
-		return fetch('https://api.cloudinary.com/v1_1/dgr9lcyrm/image/upload', {
+		data.append('upload_preset', uploadPreset)
+		data.append('api_key', api_key)
+		data.append('timestamp', ts)
+		data.append('signature', sig)
+
+		const response = await fetch(url, {
 			method: 'POST',
 			body: data,
 		})
-			.then((response) => response.text())
-			.catch((error) => console.log(error))
+		const responseJson = await response.json()
+
+		return new Promise((resolve, reject) => {
+			responseJson ? resolve(responseJson) : reject()
+		})
 	}
 
 	return (
@@ -97,7 +91,7 @@ export default function SignedFormUser() {
 				<Card className='mt-4'>
 					<CardBody className='px-lg-5 py-lg-5'>
 						<div className='text-center text-muted mb-4'>
-							<h2>Signed Form Image</h2>
+							<h2>Form Image</h2>
 						</div>
 						<Form onSubmit={handleSubmit}>
 							{/* image_title */}
@@ -114,9 +108,7 @@ export default function SignedFormUser() {
 										onChange={handleChange}
 									/>
 								</InputGroup>
-								{errors.image_title && touched.image_title && (
-									<div className='error_field'>{errors.image_title}</div>
-								)}
+								{errors.image_title && touched.image_title && <div className='error_field'>{errors.image_title}</div>}
 							</FormGroup>
 
 							{/* image_desc */}
@@ -133,9 +125,7 @@ export default function SignedFormUser() {
 										onChange={handleChange}
 									/>
 								</InputGroup>
-								{errors.image_desc && touched.image_desc && (
-									<div className='error_field'>{errors.image_desc}</div>
-								)}
+								{errors.image_desc && touched.image_desc && <div className='error_field'>{errors.image_desc}</div>}
 							</FormGroup>
 
 							{/* upload picture */}
@@ -147,18 +137,11 @@ export default function SignedFormUser() {
 									id='profile_picture'
 									onBlur={handleBlur}
 									onChange={(event) => {
-										setFieldValue(
-											'profile_picture',
-											event.currentTarget.files[0]
-										)
+										setFieldValue('profile_picture', event.currentTarget.files[0])
 									}}
 								/>
-								<FormText color='muted'>
-									Supported format .png .jpg .jpeg (maximum size: 1Mo).
-								</FormText>
-								{errors.profile_picture && touched.profile_picture && (
-									<div className='error_field'>{errors.profile_picture}</div>
-								)}
+								<FormText color='muted'>Supported format .png .jpg .jpeg (maximum size: 1Mo).</FormText>
+								{errors.profile_picture && touched.profile_picture && <div className='error_field'>{errors.profile_picture}</div>}
 							</FormGroup>
 
 							{/* submit form */}

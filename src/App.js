@@ -1,6 +1,6 @@
 import './App.css'
 import FormUser from './components/form/FormUser'
-import SignedFormUser from './components/form/SignedFormUser'
+// import SignedFormUser from './components/form/SignedFormUser'
 import { Container, Row } from 'reactstrap'
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
 			<Container>
 				<Row>
 					<FormUser />
-					<SignedFormUser />
+					{/* <SignedFormUser /> */}
 				</Row>
 			</Container>
 		</div>

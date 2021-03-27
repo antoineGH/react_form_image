@@ -1,18 +1,7 @@
 import React, { useState } from 'react'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
-import {
-	Button,
-	Card,
-	CardBody,
-	FormGroup,
-	FormText,
-	Form,
-	Input,
-	InputGroup,
-	Col,
-	Label,
-} from 'reactstrap'
+import { Button, Card, CardBody, FormGroup, FormText, Form, Input, InputGroup, Col, Label } from 'reactstrap'
 
 //INFO: FUNCTION FORM USER
 export default function FormUser() {
@@ -33,33 +22,13 @@ export default function FormUser() {
 	const validationSchema = Yup.object({
 		profile_picture: Yup.mixed()
 			.test('fileSize', 'File is too large', (value) => !value || value.size <= 2500000)
-			.test(
-				'fileType',
-				'Format is wrong',
-				(value) => !value || supported_format.includes(value.type)
-			),
-		image_title: Yup.string()
-			.min(2, 'Too short')
-			.max(20, 'Too long')
-			.matches(regexNoSpecial, 'No numbers or special characters')
-			.required('Required'),
-		image_desc: Yup.string()
-			.min(2, 'Too short')
-			.max(50, 'Too long')
-			.matches(regexNoSpecial, 'No numbers or special characters')
-			.required('Required'),
+			.test('fileType', 'Format is wrong', (value) => !value || supported_format.includes(value.type)),
+		image_title: Yup.string().min(2, 'Too short').max(20, 'Too long').matches(regexNoSpecial, 'No numbers or special characters').required('Required'),
+		image_desc: Yup.string().min(2, 'Too short').max(50, 'Too long').matches(regexNoSpecial, 'No numbers or special characters').required('Required'),
 	})
 
 	// Handle Form with Formik
-	const {
-		handleSubmit,
-		handleChange,
-		handleBlur,
-		setFieldValue,
-		values,
-		touched,
-		errors,
-	} = useFormik({
+	const { handleSubmit, handleChange, handleBlur, setFieldValue, values, touched, errors } = useFormik({
 		initialValues: {
 			file: '',
 			image_title: '',
@@ -79,11 +48,17 @@ export default function FormUser() {
 		},
 	})
 
+	function toThumbmail(url) {
+		var arr = url.split('/')
+		arr[6] = 'c_fill,h_180,w_180'
+		return arr.join('/')
+	}
+
 	function uploadPicture(values) {
 		uploadUnsignedCloudinary(values)
 			.then((response) => {
-				console.log(response)
-				setImageURL(response.url)
+				const url = toThumbmail(response.url)
+				setImageURL(url)
 			})
 			.catch((error) => {
 				console.log(error)
@@ -133,9 +108,7 @@ export default function FormUser() {
 										onChange={handleChange}
 									/>
 								</InputGroup>
-								{errors.image_title && touched.image_title && (
-									<div className='error_field'>{errors.image_title}</div>
-								)}
+								{errors.image_title && touched.image_title && <div className='error_field'>{errors.image_title}</div>}
 							</FormGroup>
 
 							{/* image_desc */}
@@ -152,9 +125,7 @@ export default function FormUser() {
 										onChange={handleChange}
 									/>
 								</InputGroup>
-								{errors.image_desc && touched.image_desc && (
-									<div className='error_field'>{errors.image_desc}</div>
-								)}
+								{errors.image_desc && touched.image_desc && <div className='error_field'>{errors.image_desc}</div>}
 							</FormGroup>
 
 							{/* upload picture */}
@@ -166,18 +137,11 @@ export default function FormUser() {
 									id='profile_picture'
 									onBlur={handleBlur}
 									onChange={(event) => {
-										setFieldValue(
-											'profile_picture',
-											event.currentTarget.files[0]
-										)
+										setFieldValue('profile_picture', event.currentTarget.files[0])
 									}}
 								/>
-								<FormText color='muted'>
-									Supported format .png .jpg .jpeg (maximum size: 1Mo).
-								</FormText>
-								{errors.profile_picture && touched.profile_picture && (
-									<div className='error_field'>{errors.profile_picture}</div>
-								)}
+								<FormText color='muted'>Supported format .png .jpg .jpeg (maximum size: 1Mo).</FormText>
+								{errors.profile_picture && touched.profile_picture && <div className='error_field'>{errors.profile_picture}</div>}
 							</FormGroup>
 
 							{/* submit form */}
@@ -197,6 +161,9 @@ export default function FormUser() {
 							Size: {profilePicture.size}Ko
 							<br />
 							Type: {profilePicture.type}
+							<br />
+							<br />
+							<img src={imageURL} alt='thumbmail' />
 						</CardBody>
 					)}
 				</Card>
