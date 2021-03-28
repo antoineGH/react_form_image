@@ -9,9 +9,7 @@
 
 ## 1. Project description<a name="description"></a>
 
-React Form Image is an implementation of a ReactJS dumb component to render a pagination.
-
-Data are provided from the following JSON: [newsFeedJson.js](src\utils\newsFeedJson.js)
+React Form Image is an implementation of forms with Formik and Yup (validation schema) and image with dropzone area.
 
 ## 2. Installation instructions<a name="installation"></a>
 
@@ -56,4 +54,4 @@ npm start
 
 ## 4. Screenshots<a name="screenshots"></a>
 
-![Pagination Screenshot](https://github.com/antoineratat/react_pagination/blob/main/screenshots/1.PNG?raw=true)
+![Form Image Screenshot](https://github.com/antoineratat/react_form_image/blob/main/screenshots/1.PNG?raw=true)
