@@ -28,7 +28,7 @@ git clone https://github.com/antoineratat/react_form_image.git
 Navigate to project directory.
 
 ```shell
-cd react_pagination
+cd react_form_image
 ```
 
 Install node modules.
