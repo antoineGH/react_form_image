@@ -9,7 +9,7 @@
 
 ## 1. Project description<a name="description"></a>
 
-React Pagination is an implementation of a ReactJS dumb component to render a pagination.
+React Form Image is an implementation of a ReactJS dumb component to render a pagination.
 
 Data are provided from the following JSON: [newsFeedJson.js](src\utils\newsFeedJson.js)
 
@@ -24,7 +24,7 @@ Versions:
 Download code from Github:
 
 ```shell
-git clone https://github.com/antoineratat/react_pagination.git
+git clone https://github.com/antoineratat/react_form_image.git
 ```
 
 Navigate to project directory.
@@ -51,10 +51,9 @@ npm start
     -   App.js
     -   App.css
     -   components
-        -   NewsFeed.js
-    -   utils
-        -   NewsFeedJson.js
+        -   FormUser.js
+        -   SignedFormUser.js
 
-## 5. Screenshots<a name="screenshots"></a>
+## 4. Screenshots<a name="screenshots"></a>
 
 ![Pagination Screenshot](https://github.com/antoineratat/react_pagination/blob/main/screenshots/1.PNG?raw=true)
