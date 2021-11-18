@@ -54,4 +54,4 @@ npm start
 
 ## 4. Screenshots<a name="screenshots"></a>
 
-![Form Image Screenshot](https://templars.guru/app/github/react_form_image/1.PNG)
+![Form Image Screenshot](https://github.com/antoineratat/github_docs/blob/main/react_form_image/1.PNG?raw=true)
